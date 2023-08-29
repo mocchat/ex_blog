@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, session, flash, g\
-    , Blueprint, redirect, url_for
+    , Blueprint, redirect, url_for, send_from_directory
 from datetime import date, datetime
 import smtplib
 import hashlib
 import pymysql
 import json
 from flask_ckeditor import CKEditor
+import os
 
 
 app = Flask(__name__)
@@ -18,7 +19,7 @@ bp = Blueprint("auth", __name__, url_prefix="/user")
 conn = pymysql.connect(host='localhost', user='root', password='!aa47287846', db='blog_db', charset='utf8')
 cur = conn.cursor()
 
-cur.execute('select passward from manager')
+cur.execute('select password from manager')
 pwd = cur.fetchall()[0][0]
 
 
@@ -46,6 +47,17 @@ def home():
                     return render_template("edit.html", epost=posts[i])
     f.close()
     return render_template("index.html", year=year, all_posts=posts)
+
+
+@app.route('/<string:page>')
+def page(page: str):
+    return render_template(page, year=year)
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/v[nd.microsoft.icon')
 
 
 @app.route("/post/<int:index>")
