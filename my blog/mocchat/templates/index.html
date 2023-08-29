@@ -31,7 +31,13 @@
         </a>
         <p class="post-meta">Posted by
           <a href="#">{{post.author}}</a>
-          on S{{post.date}}</p>
+          on {{post.date}}</p>
+        {% if g.user %}
+        <form id="contactForm" data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('home') }}" method="post">
+          <input style="display: none" type="text" name="id" value="{{post.id}}">
+          <button class="btn" id="submitButton" type="submit">Delete</button>
+        </form>
+        {% endif %}
       </div>
       <hr>
       {% endfor %}
