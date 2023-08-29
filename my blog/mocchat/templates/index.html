@@ -33,9 +33,15 @@
           <a href="#">{{post.author}}</a>
           on {{post.date}}</p>
         {% if g.user %}
-        <form id="contactForm" data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('home') }}" method="post">
+        <form id="delForm" data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('home') }}" method="post">
           <input style="display: none" type="text" name="id" value="{{post.id}}">
-          <button class="btn" id="submitButton" type="submit">Delete</button>
+          <input style="display: none" type="text" name="check" value="del">
+          <button class="btn" id="delButton" type="submit">Delete</button>
+        </form>
+        <form id="editForm" data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('home') }}" method="post">
+          <input style="display: none" type="text" name="id" value="{{post.id}}">
+          <input style="display: none" type="text" name="check" value="edit">
+          <button class="btn" id="editButton" type="submit">Edit</button>
         </form>
         {% endif %}
       </div>

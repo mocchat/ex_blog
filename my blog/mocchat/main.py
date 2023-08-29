@@ -28,22 +28,24 @@ def home():
     f = open('./static/json/post.json', 'r')
     posts = json.load(f)
     if request.method == "POST":
-        pid = int(request.form['id'])
-        for i in range(len(posts)):
-            if posts[i]['id'] == pid:
-                del posts[i]
-                break
-        f = open('./static/json/post.json', 'w')
-        json.dump(posts, f, indent="\t")
-        f.close()
-        return redirect(url_for('home'))
+        if request.form['check'] == 'del':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    del posts[i]
+                    break
+            f = open('./static/json/post.json', 'w')
+            json.dump(posts, f, indent="\t")
+            f.close()
+            return redirect(url_for('home'))
+        if request.form['check'] == 'edit':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    f.close()
+                    return render_template("edit.html", epost=posts[i])
     f.close()
     return render_template("index.html", year=year, all_posts=posts)
-
-
-@app.route('/<string:page>')
-def page(page: str):
-    return render_template(page, year=year)
 
 
 @app.route("/post/<int:index>")
@@ -117,6 +119,24 @@ def add_post():
     return render_template("add_post.html")
 
 
+@app.route('/edit', methods=["GET", "POST"])
+def edit_post():
+    if request.method == "POST":
+        data = request.form
+        with open('./static/json/post.json', 'r') as file:
+            posts = json.load(file)
+            for i in range(len(posts)):
+                if posts[i]['id'] == int(data['id']):
+                    posts[i]['title'] = data['Title']
+                    posts[i]['subtitle'] = data['Sub']
+                    posts[i]['body'] = data.get('ckeditor')
+                    print(data.get('ckeditor'))
+                    break
+        with open('./static/json/post.json', 'w') as file:
+            json.dump(posts, file, indent=4)
+        return redirect(url_for('home'))
+
+
 def send_email(name, email, phone, message):
     email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
     with smtplib.SMTP("smtp.gmail.com") as connection:
@@ -135,7 +155,6 @@ def add_json(new_post, filename='./static/json/post.json'):
         file_content.append(new_post)
         file.seek(0)
         json.dump(file_content, file, indent=4)
-        file.close()
 
 
 if __name__ == "__main__":
