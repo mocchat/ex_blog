@@ -1,13 +1,15 @@
 from flask import Flask, render_template, request, session, flash, g\
     , Blueprint, redirect, url_for
 from datetime import date, datetime
-import requests
 import smtplib
 import hashlib
 import pymysql
 import json
+from flask_ckeditor import CKEditor
+
 
 app = Flask(__name__)
+ckeditor = CKEditor(app)
 OWN_EMAIL = "5658love5658@gmail.com"
 OWN_PASSWORD = "svikaanwyilxmwdh"
 app.config["SECRET_KEY"] = "ABCD"
@@ -18,7 +20,6 @@ cur = conn.cursor()
 
 cur.execute('select passward from manager')
 pwd = cur.fetchall()[0][0]
-
 
 
 @app.route('/')
@@ -109,7 +110,7 @@ def add_post():
             "subtitle": data['Sub'],
             "author": 'manager',
             "date": str(d.year) + '년' + str(d.month) + '월' + str(d.day) + '일',
-            "body": data['Body']
+            "body": data.get('ckeditor')
         }
         add_json(new)
         return redirect(url_for('home'))

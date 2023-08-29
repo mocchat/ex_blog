@@ -11,6 +11,7 @@
                 </div>
             </div>
         </header>
+{{ ckeditor.load() }}
         <!-- Main Content-->
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -39,28 +40,9 @@
                                     <label for="Author">Author</label>
                                 </div>
                                 <div class="form-floating">
-                                    <textarea class="form-control" id="Body" name="Body" placeholder="Enter your body here..." style="height: 12rem" data-sb-validations="required"></textarea>
-                                    <label for="Body">Body</label>
-                                    <div class="invalid-feedback" data-sb-feedback="body:required">A body is required.</div>
+                                    {{ ckeditor.create() }}
                                 </div>
                                 <br />
-                                <!-- Submit success message-->
-                                <!---->
-                                <!-- This is what your users will see when the form-->
-                                <!-- has successfully submitted-->
-                                <div class="d-none" id="submitSuccessMessage">
-                                    <div class="text-center mb-3">
-                                        <div class="fw-bolder">Form submission successful!</div>
-                                        To activate this form, sign up at
-                                        <br />
-                                        <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                    </div>
-                                </div>
-                                <!-- Submit error message-->
-                                <!---->
-                                <!-- This is what your users will see when there is-->
-                                <!-- an error submitting the form-->
-                                <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
                                 <!-- Submit Button-->
                                 <button class="btn btn-primary" id="submitButton" type="submit">Send</button>
                             </form>
