@@ -15,13 +15,13 @@ OWN_EMAIL = "5658love5658@gmail.com"
 OWN_PASSWORD = "svikaanwyilxmwdh"
 app.config["SECRET_KEY"] = "ABCD"
 bp = Blueprint("auth", __name__, url_prefix="/user")
-
+"""
 conn = pymysql.connect(host='localhost', user='root', password='!aa47287846', db='blog_db', charset='utf8')
 cur = conn.cursor()
 
 cur.execute('select password from manager')
 pwd = cur.fetchall()[0][0]
-
+"""
 
 @app.route('/')
 @app.route('/index.html', methods=["GET", "POST"])
@@ -88,7 +88,7 @@ def login():
         password = request.form['password']
         m = hashlib.sha256()
         m.update(password.encode('utf-8'))  #f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3
-        if m.hexdigest() != pwd:
+        if m.hexdigest() != 'f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3':
             error = "비밀번호가 올바르지 않습니다."
         if error is None:
             session.clear()
