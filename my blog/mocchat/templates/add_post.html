@@ -1,16 +1,15 @@
 {% include "header.html" %}
-        <!-- Page Header-->
-        <header class="masthead" style="background-image: url('static/assets/img/contact-bg.jpg')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="page-heading">
-                                <h1>Add Post</h1>
-                        </div>
-                    </div>
-                </div>
+ <div id="wrapper">
+
+    <!-- Banner -->
+        <section id="banner" class="major">
+            <div class="inner">
+                <header class="major">
+                    <h1 style="color: #fff">Add post</h1>
+                </header>
             </div>
-        </header>
+        </section>
+</div>
 {{ ckeditor.load() }}
         <!-- Main Content-->
             <div class="container px-4 px-lg-5">
@@ -30,6 +29,7 @@
                                     <select name="category">
                                         <option value="Blog">Blog</option>
                                         <option value="Test">Test</option>
+                                        <option value="Algo">Algorithms</option>
                                     </select>
                                 </div>
                                 <div class="form-floating">
@@ -41,10 +41,6 @@
                                     <input class="form-control" id="Sub" name="Sub" type="text" placeholder="Enter your subtitle..." data-sb-validations="required,email" />
                                     <label for="Sub">Sub Title</label>
                                     <div class="invalid-feedback" data-sb-feedback="title:required">An Subtitle is required.</div>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control" id="Author"  name="Author" type="text" placeholder="Enter Author..." data-sb-validations="required" />
-                                    <label for="Author">Author</label>
                                 </div>
                                 <div class="form-floating">
                                     {{ ckeditor.create() }}

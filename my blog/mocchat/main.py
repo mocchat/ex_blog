@@ -24,7 +24,7 @@ pwd = cur.fetchall()[0][0]
 """
 
 @app.route('/')
-@app.route('/index.html',)
+@app.route('/home',)
 def home():
     return render_template("index.html", year=year)
 
@@ -33,6 +33,16 @@ def home():
 @app.route('/<string:page>')
 def page(page: str):
     return render_template(page, year=year)
+
+
+@app.route('/sample')
+def sample():
+    return render_template("sample.html", year=year)
+
+
+@app.route('/about')
+def about():
+    return render_template("about.html", year=year)
 
 
 #favicon 관련 오류 해결
@@ -46,13 +56,19 @@ def favicon():
 @app.route("/post/<int:index>/<category>")
 def show_post(index, category):
     requested_post = None
+    posts = []
     if category == 'Blog':
         f = open('./static/json/post.json', 'r')
         posts = json.load(f)
+        f.close()
     elif category == 'Test':
         f = open('./static/json/Test.json', 'r')
         posts = json.load(f)
-    f.close()
+        f.close()
+    elif category == 'Algo':
+        f = open('./static/json/algo.json', 'r')
+        posts = json.load(f)
+        f.close()
     for blog_post in posts:
         if blog_post["id"] == index:
             requested_post = blog_post
@@ -77,18 +93,21 @@ def login():
         password = request.form['password']
         m = hashlib.sha256()
         m.update(password.encode('utf-8'))  #f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3 (비번은 'qwer')
-        if m.hexdigest() != 'f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3':
+        if m.hexdigest() != 'f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3' and m.hexdigest() != '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4':
             error = "비밀번호가 올바르지 않습니다."
         if error is None:
             session.clear()
-            session['manager'] = 'login'
+            if password == 'qwer':
+                session['manager'] = 'mocchat'
+            else:
+                session['manager'] = 'lindin'
             return redirect(url_for('home'))
         flash(error)
     return render_template("login.html")
 
 
 #블로그 포스팅 보는 곳
-@app.route("/blog_post.html", methods=["GET", "POST"])
+@app.route("/blog_post", methods=["GET", "POST"])
 def blog_post():
     f = open('./static/json/post.json', 'r')
     posts = json.load(f)
@@ -114,7 +133,7 @@ def blog_post():
 
 
 #테스트 포스팅 보는곳 
-@app.route("/test_post.html", methods=["GET", "POST"])
+@app.route("/test_post", methods=["GET", "POST"])
 def test_post():
     f = open('./static/json/test.json', 'r')
     posts = json.load(f)
@@ -126,10 +145,10 @@ def test_post():
                 if posts[i]['id'] == pid:
                     del posts[i]
                     break
-            f = open('./static/json/post.json', 'w')
+            f = open('./static/json/test.json', 'w')
             json.dump(posts, f, indent="\t")
             f.close()
-            return redirect(url_for('blog_post'))
+            return redirect(url_for('test_post'))
         if request.form['check'] == 'edit':
             pid = int(request.form['id'])
             for i in range(len(posts)):
@@ -137,6 +156,31 @@ def test_post():
                     f.close()
                     return render_template("edit.html", epost=posts[i])
     return render_template("test_post.html", year=year, all_posts=posts)
+
+
+@app.route("/algo_post", methods=["GET", "POST"])
+def algo_post():
+    f = open('./static/json/algo.json', 'r')
+    posts = json.load(f)
+    f.close()
+    if request.method == "POST":
+        if request.form['check'] == 'del':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    del posts[i]
+                    break
+            f = open('./static/json/algo.json', 'w')
+            json.dump(posts, f, indent="\t")
+            f.close()
+            return redirect(url_for('algo_post'))
+        if request.form['check'] == 'edit':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    f.close()
+                    return render_template("edit.html", epost=posts[i])
+    return render_template("algo_post.html", year=year, all_posts=posts)
 
 
 #로그인 확인
@@ -167,16 +211,19 @@ def add_post():
             "category": data['category'],
             "title": data['Title'],
             "subtitle": data['Sub'],
-            "author": 'manager',
+            "author": g.user,
             "date": str(d.year) + '년' + str(d.month) + '월' + str(d.day) + '일',
             "body": data.get('ckeditor')
         }
         if data['category'] == 'Blog':
             add_blogjson(new)   #아래에 함수 있음
-            return redirect(url_for('home'))
+            return redirect(url_for('blog_post'))
         elif data['category'] == "Test":
             add_testjson(new)
-            return redirect(url_for('home'))
+            return redirect(url_for('test_post'))
+        elif data['category'] == 'Algo':
+            add_algojson(new)
+            return redirect(url_for('algo_post'))
     return render_template("add_post.html")
 
 
@@ -196,7 +243,7 @@ def edit_post():
                         break
             with open('./static/json/post.json', 'w') as file:
                 json.dump(posts, file, indent=4)
-            return redirect(url_for('home'))
+            return redirect(url_for('blog_post'))
         elif data['category'] == 'Test':
             with open('./static/json/Test.json', 'r') as file:
                 posts = json.load(file)
@@ -208,7 +255,19 @@ def edit_post():
                         break
             with open('./static/json/Test.json', 'w') as file:
                 json.dump(posts, file, indent=4)
-            return redirect(url_for('home'))
+            return redirect(url_for('test_post'))
+        elif data['category'] == 'Algo':
+            with open('./static/json/algo.json', 'r') as file:
+                posts = json.load(file)
+                for i in range(len(posts)):
+                    if posts[i]['id'] == int(data['id']):
+                        posts[i]['title'] = data['Title']
+                        posts[i]['subtitle'] = data['Sub']
+                        posts[i]['body'] = data.get('ckeditor')
+                        break
+            with open('./static/json/algo.json', 'w') as file:
+                json.dump(posts, file, indent=4)
+            return redirect(url_for('algo_post'))
 
 
 #메일 보내는 함수
@@ -235,6 +294,18 @@ def add_blogjson(new_post, filename='./static/json/post.json'):
 
 #테스트 포스트 추가 함수
 def add_testjson(new_post, filename='./static/json/Test.json'):
+    with open(filename, 'r+') as file:
+        file_content = json.load(file)
+        if len(file_content) == 0:
+            new_post['id'] = 0
+        else:
+            new_post['id'] = file_content[len(file_content)-1]['id'] + 1
+        file_content.append(new_post)
+        file.seek(0)
+        json.dump(file_content, file, indent=4)
+
+
+def add_algojson(new_post, filename='./static/json/algo.json'):
     with open(filename, 'r+') as file:
         file_content = json.load(file)
         if len(file_content) == 0:

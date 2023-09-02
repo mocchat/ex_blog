@@ -5,8 +5,11 @@
         <section id="banner" class="major">
             <div class="inner">
                 <header class="major">
-                    <h1 style="color: #fff">Blog Post</h1>
+                    <h1 style="color: #fff">Blog project post</h1>
                 </header>
+                <div class="content">
+                    <p style="color: #fff">We're working on this project.</p>
+                </div>
             </div>
         </section>
 </div>
@@ -14,10 +17,10 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-      <h1>Blog</h1>
       {% for post in all_posts %}
       <div class="post-preview">
-        <a href="{{ url_for('show_post', index=post.id, category='Test') }}">
+
+        <a href="{{ url_for('show_post', index=post.id, category='Blog') }}">
           <h2 class="post-title">
              {{post.title}}
           </h2>
@@ -26,7 +29,7 @@
           </h3>
         </a>
         <p class="post-meta">Posted by
-          <a href="#">{{post.author}}</a>
+          {{post.author}}
           on {{post.date}}</p>
         {% if g.user %}
         <form data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('blog_post') }}" method="post">

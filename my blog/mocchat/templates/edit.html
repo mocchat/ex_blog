@@ -36,14 +36,11 @@
                                     <div class="invalid-feedback" data-sb-feedback="title:required">An Subtitle is required.</div>
                                 </div>
                                 <div class="form-floating">
-                                    <input class="form-control" id="Author"  name="Author" type="text" placeholder="Enter Author..." data-sb-validations="required" value="{{epost.author}}"/>
-                                    <label for="Author">Author</label>
-                                </div>
-                                <div class="form-floating">
                                     {{ ckeditor.create(value=epost.body) }}
                                 </div>
                                 <input style="display: none" type="text" name="id" value="{{epost.id}}">
                                 <br />
+                                <input style="display: none" type="text" name="category" value="{{epost.category}}">
                                 <!-- Submit Button-->
                                 <button class="btn btn-primary" id="submitButton" type="submit">Send</button>
                             </form>
