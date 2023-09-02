@@ -1,59 +1,51 @@
 {% include "header.html" %}
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('static/assets/img/home-bg.jpg')">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="site-heading">
-          <h1 style="color:darkblue;">Jo's Blog</h1>
-          <span class="subheading" style="color:skyblue;">The greatest gamer</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
+<!-- Wrapper -->
+			<div id="wrapper">
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
-      {% for post in all_posts %}
-      <div class="post-preview">
-        <a href="{{ url_for('show_post', index=post.id) }}">
-          <h2 class="post-title">
-             {{post.title}}
-          </h2>
-          <h3 class="post-subtitle">
-            {{post.subtitle}}
-          </h3>
-        </a>
-        <p class="post-meta">Posted by
-          <a href="#">{{post.author}}</a>
-          on {{post.date}}</p>
-        {% if g.user %}
-        <form id="delForm" data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('home') }}" method="post">
-          <input style="display: none" type="text" name="id" value="{{post.id}}">
-          <input style="display: none" type="text" name="check" value="del">
-          <button class="btn" id="delButton" type="submit">Delete</button>
-        </form>
-        <form id="editForm" data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('home') }}" method="post">
-          <input style="display: none" type="text" name="id" value="{{post.id}}">
-          <input style="display: none" type="text" name="check" value="edit">
-          <button class="btn" id="editButton" type="submit">Edit</button>
-        </form>
-        {% endif %}
-      </div>
-      <hr>
-      {% endfor %}
-      <!-- Pager -->
-      <div class="clearfix">
-        <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-      </div>
-    </div>
-  </div>
-</div>
+				<!-- Banner -->
+					<section id="banner" class="major">
+						<div class="inner">
+							<header class="major">
+								<h1 style="color: #fff">Welcome to my blog</h1>
+							</header>
+							<div class="content">
+								<p style="color: #fff">The balthus gate3 is greate game<br />
+								and I want to play the game.</p>
+							</div>
+						</div>
+					</section>
+			</div>
+				<!-- Main -->
+					<div id="main">
+
+						<!-- One -->
+							<section id="one" class="tiles">
+								<article>
+									<span class="image">
+										<img src="images/pic01.jpg" alt="" />
+									</span>
+									<header class="major">
+										<h3 style="color: #fff"><a href="../blog_post.html" class="link">Blog</a></h3>
+										<p style="color: #fff">Ipsum dolor sit amet</p>
+									</header>
+								</article>
+								<article>
+									<span class="image">
+										<img src="images/pic02.jpg" alt="" />
+									</span>
+									<header class="major">
+										<h3 style="color: #fff"><a href="test_post.html" class="link">Test</a></h3>
+										<p style="color: #fff">feugiat amet tempus</p>
+									</header>
+								</article>
+
+							</section>
+
+
+			</div>
+
 
 <hr>
 
