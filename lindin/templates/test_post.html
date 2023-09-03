@@ -1,0 +1,56 @@
+{% include "header.html" %}
+<div id="wrapper">
+
+    <!-- Banner -->
+        <section id="banner" class="major">
+            <div class="inner">
+                <header class="major">
+                    <h1 style="color: #fff">Test Post</h1>
+                </header>
+                <div class="content">
+                    <p style="color: #fff">This is where we test the function.</p>
+                </div>
+            </div>
+        </section>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      {% for post in all_posts %}
+      <div class="post-preview">
+        <a href="{{ url_for('show_post', index=post.id, category='Test') }}">
+          <h2 class="post-title">
+             {{post.title}}
+          </h2>
+          <h3 class="post-subtitle">
+            {{post.subtitle}}
+          </h3>
+        </a>
+        <p class="post-meta">Posted by
+          {{post.author}}
+          on {{post.date}}</p>
+        {% if g.user %}
+        <form data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('test_post') }}" method="post">
+          <input style="display: none" type="text" name="id" value="{{post.id}}">
+          <input style="display: none" type="text" name="category" value="{{post.category}}">
+          <input style="display: none" type="text" name="check" value="del">
+          <button class="btn" type="submit">Delete</button>
+        </form>
+        <form  data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('test_post') }}" method="post">
+          <input style="display: none" type="text" name="id" value="{{post.id}}">
+          <input style="display: none" type="text" name="category" value="{{post.category}}">
+          <input style="display: none" type="text" name="check" value="edit">
+          <button class="btn" type="submit">Edit</button>
+        </form>
+        {% endif %}
+      </div>
+      <hr>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<hr>
+
+{% include "footer.html" %}
