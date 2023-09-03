@@ -51,11 +51,14 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/v[nd.microsoft.icon')
 
+
 @app.route('/search', methods=["POST"])
 def search_post():
     keyword = request.form.get("keyword")
     search_results = search_posts(keyword)
     return render_template("search_results.html", keyword=keyword, search_results=search_results)
+
+
 def search_posts(keyword):
     all_posts = []
     search_results = []
@@ -71,10 +74,8 @@ def search_posts(keyword):
     return search_results
 
 
-
-
-
 comments = []
+
 
 #각 포스트 페이지 
 @app.route("/post/<int:index>/<category>", methods=["GET", "POST"])
@@ -115,12 +116,14 @@ def show_post(index, category):
 
     return render_template("post.html", post=requested_post, comments=post_comments)
 
+
 #댓삭
 @app.route("/delete_comment/<int:comment_id>", methods=["POST"])
 def delete_comment(comment_id):
     global comments
     comments = [comment for comment in comments if comment["id"] != comment_id]
     return redirect(request.referrer)
+
 
 #컨택
 @app.route("/contact", methods=["GET", "POST"])
