@@ -74,9 +74,6 @@ def search_posts(keyword):
     return search_results
 
 
-comments = []
-
-
 #각 포스트 페이지 
 @app.route("/post/<int:index>/<category>", methods=["GET", "POST"])
 def show_post(index, category):
@@ -103,26 +100,88 @@ def show_post(index, category):
         comment_text = request.form.get("comment_text")
         comment_author = g.user  # 현재 로그인한 사용자
         comment_post_id = index  # 현재 포스트의 ID
-
-        new_comment = {
-            "text": comment_text,
-            "author": comment_author,
-            "post_id": comment_post_id,
-            "id": len(comments) + 1
-        }
-        comments.append(new_comment)
-
-    post_comments = [comment for comment in comments if comment["post_id"] == index]
-
-    return render_template("post.html", post=requested_post, comments=post_comments)
+        comment_category = request.form.get("category")
+        if comment_category == 'Blog':
+            f = open('./static/json/post.json', 'r')
+            post = json.load(f)
+            f.close()
+        elif comment_category == 'Test':
+            f = open('./static/json/Test.json', 'r')
+            post = json.load(f)
+            f.close()
+        elif comment_category == 'Algo':
+            f = open('./static/json/algo.json', 'r')
+            post = json.load(f)
+            f.close()
+        d = datetime.now()
+        if len(requested_post['comment']) != 0:
+            new_comment = {
+                "text": comment_text,
+                "author": comment_author,
+                "date": str(d.year) + '년' + str(d.month) + '월' + str(d.day) + '일',
+                "comment_id": requested_post['comment'][len(requested_post['comment'])-1]['comment_id'] + 1
+            }
+        else:
+            new_comment = {
+                "text": comment_text,
+                "author": comment_author,
+                "date": str(d.year) + '년' + str(d.month) + '월' + str(d.day) + '일',
+                "comment_id": 0
+            }
+        for i in range(len(post)):
+            if post[i]['id'] == comment_post_id:
+                post[i]['comment'].append(new_comment)
+                if comment_category == 'Blog':
+                    f = open('./static/json/post.json', 'w')
+                    json.dump(post, f, indent="\t")
+                    f.close()
+                elif comment_category == 'Test':
+                    f = open('./static/json/Test.json', 'w')
+                    json.dump(post, f, indent="\t")
+                    f.close()
+                elif comment_category == 'Algo':
+                    f = open('./static/json/algo.json', 'w')
+                    json.dump(post, f, indent="\t")
+                    f.close()
+                return redirect(url_for('show_post', index=index, category=category))
+    return render_template("post.html", post=requested_post)
 
 
 #댓삭
-@app.route("/delete_comment/<int:comment_id>", methods=["POST"])
-def delete_comment(comment_id):
-    global comments
-    comments = [comment for comment in comments if comment["id"] != comment_id]
-    return redirect(request.referrer)
+@app.route("/delete_comment/<int:index>/<int:comment_id>/<category>", methods=["POST"])
+def delete_comment(index, comment_id, category):
+    if category == 'Blog':
+        f = open('./static/json/post.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Test':
+        f = open('./static/json/Test.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Algo':
+        f = open('./static/json/algo.json', 'r')
+        posts = json.load(f)
+        f.close()
+    for blog_post in posts:
+        if blog_post["id"] == index:
+            for i in range(len(blog_post['comment'])):
+                if blog_post['comment'][i]['comment_id'] == comment_id:
+                    del blog_post['comment'][i]
+                    break
+            break
+    if category == 'Blog':
+        f = open('./static/json/post.json', 'w')
+        json.dump(posts, f, indent="\t")
+        f.close()
+    elif category == 'Test':
+        f = open('./static/json/Test.json', 'w')
+        json.dump(posts, f, indent="\t")
+        f.close()
+    elif category == 'Algo':
+        f = open('./static/json/algo.json', 'w')
+        json.dump(posts, f, indent="\t")
+        f.close()
+    return redirect(url_for('show_post', index=index, category=category))
 
 
 #컨택
@@ -263,7 +322,8 @@ def add_post():
             "subtitle": data['Sub'],
             "author": g.user,
             "date": str(d.year) + '년' + str(d.month) + '월' + str(d.day) + '일',
-            "body": data.get('ckeditor')
+            "body": data.get('ckeditor'),
+            "comment": []
         }
         if data['category'] == 'Blog':
             add_blogjson(new)   #아래에 함수 있음

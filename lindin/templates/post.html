@@ -33,13 +33,13 @@
 <div class="comments">
     <h3>댓글</h3>
     <ul>
-        {% for comment in comments %}
+        {% for co in post.comment %}
             <li>
-                <strong>{{ comment.author }}</strong>
-                <span>{{ comment.date }}</span>
-                <p>{{ comment.text }}</p>
+                <strong>{{ co.author }}</strong>
+                <span>{{ co.date }}</span>
+                <p>{{ co.text }}</p>
                 <!-- 삭제 버튼 추가 -->
-                <form method="POST" action="{{ url_for('delete_comment', comment_id=comment.id) }}">
+                <form method="POST" action="{{ url_for('delete_comment', index=post.id, comment_id=co.comment_id, category=post.category) }}">
                     <button type="submit">댓글 삭제</button>
                 </form>
 
@@ -47,6 +47,7 @@
         {% endfor %}
     </ul>
     <form method="POST" action="{{ url_for('show_post', index=post.id, category=post.category) }}">
+        <input style="display: none" type="text" name="category" value="{{post.category}}">
         <textarea name="comment_text" rows="4" placeholder="댓글 작성"></textarea>
         <button type="submit">댓글 작성</button>
     </form>

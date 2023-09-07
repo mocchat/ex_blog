@@ -1,15 +1,18 @@
 {% include "header.html" %}
-    <header class="masthead" style="background-image: url('static/assets/img/post-bg.jpg')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="page-heading">
-                        <h1>MANAGER</h1>
+     <div id="wrapper">
+
+        <!-- Banner -->
+            <section id="banner" class="major">
+                <div class="inner">
+                    <header class="major">
+                        <h1 style="color: #fff">Login</h1>
+                    </header>
+                    <div class="content">
+                        <p style="color: #fff">Manager login.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </header>
+            </section>
+    </div>
     <div class="container">
         <h5 class="my-3 border-bottom pb-2">로그인</h5>
         <form method="post" action="{{ url_for('login') }}">
