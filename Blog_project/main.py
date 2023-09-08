@@ -64,7 +64,7 @@ def search_posts(keyword):
     search_results = []
     with open('./static/json/post.json', 'r') as file:
         all_posts += json.load(file)
-    with open('./static/json/test.json', 'r') as file:
+    with open('./static/json/Test.json', 'r') as file:
         all_posts += json.load(file)
     with open('./static/json/algo.json', 'r') as file:
         all_posts += json.load(file)
@@ -209,7 +209,7 @@ def login():
             if password == 'qwer':
                 session['manager'] = 'mocchat'
             else:
-                session['manager'] = 'lindin'
+                session['manager'] = 'Blog_project'
             return redirect(url_for('home'))
         flash(error)
     return render_template("login.html")
@@ -244,7 +244,7 @@ def blog_post():
 #테스트 포스팅 보는곳 
 @app.route("/test_post", methods=["GET", "POST"])
 def test_post():
-    f = open('./static/json/test.json', 'r')
+    f = open('./static/json/Test.json', 'r')
     posts = json.load(f)
     f.close()
     if request.method == "POST":
@@ -254,7 +254,7 @@ def test_post():
                 if posts[i]['id'] == pid:
                     del posts[i]
                     break
-            f = open('./static/json/test.json', 'w')
+            f = open('./static/json/Test.json', 'w')
             json.dump(posts, f, indent="\t")
             f.close()
             return redirect(url_for('test_post'))
