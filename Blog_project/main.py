@@ -221,6 +221,7 @@ def blog_post():
     f = open('./static/json/post.json', 'r')
     posts = json.load(f)
     f.close()
+    re_posts = list(reversed(posts))
     if request.method == "POST":
         if request.form['check'] == 'del':
             pid = int(request.form['id'])
@@ -238,7 +239,7 @@ def blog_post():
                 if posts[i]['id'] == pid:
                     f.close()
                     return render_template("edit.html", epost=posts[i])
-    return render_template("blog_post.html", year=year, all_posts=posts)
+    return render_template("blog_post.html", year=year, all_posts=re_posts)
 
 
 #테스트 포스팅 보는곳 
@@ -247,6 +248,7 @@ def test_post():
     f = open('./static/json/Test.json', 'r')
     posts = json.load(f)
     f.close()
+    re_posts = list(reversed(posts))
     if request.method == "POST":
         if request.form['check'] == 'del':
             pid = int(request.form['id'])
@@ -264,7 +266,7 @@ def test_post():
                 if posts[i]['id'] == pid:
                     f.close()
                     return render_template("edit.html", epost=posts[i])
-    return render_template("test_post.html", year=year, all_posts=posts)
+    return render_template("test_post.html", year=year, all_posts=re_posts)
 
 
 @app.route("/algo_post", methods=["GET", "POST"])
@@ -272,6 +274,7 @@ def algo_post():
     f = open('./static/json/algo.json', 'r')
     posts = json.load(f)
     f.close()
+    re_posts = list(reversed(posts))
     if request.method == "POST":
         if request.form['check'] == 'del':
             pid = int(request.form['id'])
@@ -289,7 +292,7 @@ def algo_post():
                 if posts[i]['id'] == pid:
                     f.close()
                     return render_template("edit.html", epost=posts[i])
-    return render_template("algo_post.html", year=year, all_posts=posts)
+    return render_template("algo_post.html", year=year, all_posts=re_posts)
 
 
 #로그인 확인
