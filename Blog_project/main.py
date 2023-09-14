@@ -64,9 +64,11 @@ def search_posts(keyword):
     search_results = []
     with open('./static/json/post.json', 'r') as file:
         all_posts += json.load(file)
-    with open('./static/json/Test.json', 'r') as file:
+    with open('static/json/Certificate.json', 'r') as file:
         all_posts += json.load(file)
     with open('./static/json/algo.json', 'r') as file:
+        all_posts += json.load(file)
+    with open('./static/json/crawl.json', 'r') as file:
         all_posts += json.load(file)
     for post in all_posts:
         if keyword.lower() in post["title"].lower() or keyword.lower() in post["body"].lower():
@@ -84,11 +86,15 @@ def show_post(index, category):
         posts = json.load(f)
         f.close()
     elif category == 'Test':
-        f = open('./static/json/Test.json', 'r')
+        f = open('static/json/Certificate.json', 'r')
         posts = json.load(f)
         f.close()
     elif category == 'Algo':
         f = open('./static/json/algo.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Crawl':
+        f = open('./static/json/crawl.json', 'r')
         posts = json.load(f)
         f.close()
     for blog_post in posts:
@@ -106,11 +112,15 @@ def show_post(index, category):
             post = json.load(f)
             f.close()
         elif comment_category == 'Test':
-            f = open('./static/json/Test.json', 'r')
+            f = open('static/json/Certificate.json', 'r')
             post = json.load(f)
             f.close()
         elif comment_category == 'Algo':
             f = open('./static/json/algo.json', 'r')
+            post = json.load(f)
+            f.close()
+        elif comment_category == 'Crawl':
+            f = open('./static/json/crawl.json', 'r')
             post = json.load(f)
             f.close()
         d = datetime.now()
@@ -136,11 +146,15 @@ def show_post(index, category):
                     json.dump(post, f, indent="\t")
                     f.close()
                 elif comment_category == 'Test':
-                    f = open('./static/json/Test.json', 'w')
+                    f = open('static/json/Certificate.json', 'w')
                     json.dump(post, f, indent="\t")
                     f.close()
                 elif comment_category == 'Algo':
                     f = open('./static/json/algo.json', 'w')
+                    json.dump(post, f, indent="\t")
+                    f.close()
+                elif comment_category == 'Crawl':
+                    f = open('./static/json/crawl.json', 'w')
                     json.dump(post, f, indent="\t")
                     f.close()
                 return redirect(url_for('show_post', index=index, category=category))
@@ -155,11 +169,15 @@ def delete_comment(index, comment_id, category):
         posts = json.load(f)
         f.close()
     elif category == 'Test':
-        f = open('./static/json/Test.json', 'r')
+        f = open('static/json/Certificate.json', 'r')
         posts = json.load(f)
         f.close()
     elif category == 'Algo':
         f = open('./static/json/algo.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Crawl':
+        f = open('./static/json/crawl.json', 'r')
         posts = json.load(f)
         f.close()
     for blog_post in posts:
@@ -174,11 +192,15 @@ def delete_comment(index, comment_id, category):
         json.dump(posts, f, indent="\t")
         f.close()
     elif category == 'Test':
-        f = open('./static/json/Test.json', 'w')
+        f = open('static/json/Certificate.json', 'w')
         json.dump(posts, f, indent="\t")
         f.close()
     elif category == 'Algo':
         f = open('./static/json/algo.json', 'w')
+        json.dump(posts, f, indent="\t")
+        f.close()
+    elif category == 'Crawl':
+        f = open('./static/json/crawl.json', 'w')
         json.dump(posts, f, indent="\t")
         f.close()
     return redirect(url_for('show_post', index=index, category=category))
@@ -243,9 +265,9 @@ def blog_post():
 
 
 #테스트 포스팅 보는곳 
-@app.route("/test_post", methods=["GET", "POST"])
+@app.route("/certificate_post", methods=["GET", "POST"])
 def test_post():
-    f = open('./static/json/Test.json', 'r')
+    f = open('static/json/Certificate.json', 'r')
     posts = json.load(f)
     f.close()
     re_posts = list(reversed(posts))
@@ -256,7 +278,7 @@ def test_post():
                 if posts[i]['id'] == pid:
                     del posts[i]
                     break
-            f = open('./static/json/Test.json', 'w')
+            f = open('static/json/Certificate.json', 'w')
             json.dump(posts, f, indent="\t")
             f.close()
             return redirect(url_for('test_post'))
@@ -266,7 +288,7 @@ def test_post():
                 if posts[i]['id'] == pid:
                     f.close()
                     return render_template("edit.html", epost=posts[i])
-    return render_template("test_post.html", year=year, all_posts=re_posts)
+    return render_template("certificate_post.html", year=year, all_posts=re_posts)
 
 
 @app.route("/algo_post", methods=["GET", "POST"])
@@ -293,6 +315,32 @@ def algo_post():
                     f.close()
                     return render_template("edit.html", epost=posts[i])
     return render_template("algo_post.html", year=year, all_posts=re_posts)
+
+
+@app.route("/crawl_post", methods=["GET", "POST"])
+def crawl_post():
+    f = open('./static/json/crawl.json', 'r')
+    posts = json.load(f)
+    f.close()
+    re_posts = list(reversed(posts))
+    if request.method == "POST":
+        if request.form['check'] == 'del':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    del posts[i]
+                    break
+            f = open('./static/json/crawl.json', 'w')
+            json.dump(posts, f, indent="\t")
+            f.close()
+            return redirect(url_for('crawl_post'))
+        if request.form['check'] == 'edit':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    f.close()
+                    return render_template("edit.html", epost=posts[i])
+    return render_template("crawl_post.html", year=year, all_posts=re_posts)
 
 
 #로그인 확인
@@ -337,6 +385,9 @@ def add_post():
         elif data['category'] == 'Algo':
             add_algojson(new)
             return redirect(url_for('algo_post'))
+        elif data['category'] == 'Crawl':
+            add_crawljson(new)
+            return redirect(url_for('crawl_post'))
     return render_template("add_post.html")
 
 
@@ -358,7 +409,7 @@ def edit_post():
                 json.dump(posts, file, indent=4)
             return redirect(url_for('blog_post'))
         elif data['category'] == 'Test':
-            with open('./static/json/Test.json', 'r') as file:
+            with open('static/json/Certificate.json', 'r') as file:
                 posts = json.load(file)
                 for i in range(len(posts)):
                     if posts[i]['id'] == int(data['id']):
@@ -366,7 +417,7 @@ def edit_post():
                         posts[i]['subtitle'] = data['Sub']
                         posts[i]['body'] = data.get('ckeditor')
                         break
-            with open('./static/json/Test.json', 'w') as file:
+            with open('static/json/Certificate.json', 'w') as file:
                 json.dump(posts, file, indent=4)
             return redirect(url_for('test_post'))
         elif data['category'] == 'Algo':
@@ -381,6 +432,18 @@ def edit_post():
             with open('./static/json/algo.json', 'w') as file:
                 json.dump(posts, file, indent=4)
             return redirect(url_for('algo_post'))
+        elif data['category'] == 'Crawl':
+            with open('./static/json/crawl.json', 'r') as file:
+                posts = json.load(file)
+                for i in range(len(posts)):
+                    if posts[i]['id'] == int(data['id']):
+                        posts[i]['title'] = data['Title']
+                        posts[i]['subtitle'] = data['Sub']
+                        posts[i]['body'] = data.get('ckeditor')
+                        break
+            with open('./static/json/crawl.json', 'w') as file:
+                json.dump(posts, file, indent=4)
+            return redirect(url_for('crawl_post'))
 
 
 #메일 보내는 함수
@@ -406,7 +469,7 @@ def add_blogjson(new_post, filename='./static/json/post.json'):
 
 
 #테스트 포스트 추가 함수
-def add_testjson(new_post, filename='./static/json/Test.json'):
+def add_testjson(new_post, filename='./static/json/Certificate.json'):
     with open(filename, 'r+') as file:
         file_content = json.load(file)
         if len(file_content) == 0:
@@ -419,6 +482,18 @@ def add_testjson(new_post, filename='./static/json/Test.json'):
 
 
 def add_algojson(new_post, filename='./static/json/algo.json'):
+    with open(filename, 'r+') as file:
+        file_content = json.load(file)
+        if len(file_content) == 0:
+            new_post['id'] = 0
+        else:
+            new_post['id'] = file_content[len(file_content)-1]['id'] + 1
+        file_content.append(new_post)
+        file.seek(0)
+        json.dump(file_content, file, indent=4)
+
+
+def add_crawljson(new_post, filename='./static/json/crawl.json'):
     with open(filename, 'r+') as file:
         file_content = json.load(file)
         if len(file_content) == 0:
