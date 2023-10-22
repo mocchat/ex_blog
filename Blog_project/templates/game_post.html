@@ -5,10 +5,10 @@
         <section id="banner" class="major">
             <div class="inner">
                 <header class="major">
-                    <h1 style="color: #fff">Algorithms post</h1>
+                    <h1 style="color: #fff">Game post</h1>
                 </header>
                 <div class="content">
-                    <p style="color: #fff">There's a Baekjun algorithm problem solving here</p>
+                    <p style="color: #fff">It's a game development project at school</p>
                 </div>
             </div>
         </section>
@@ -20,7 +20,7 @@
       {% for post in all_posts %}
       <div class="post-preview">
 
-        <a href="{{ url_for('show_post', index=post.id, category='Algo') }}">
+        <a href="{{ url_for('show_post', index=post.id, category='Game') }}">
           <h2 class="post-title">
              {{post.title}}
           </h2>
@@ -33,13 +33,13 @@
           on {{post.date}}</p>
         {% if g.user %}
         <div>
-            <form data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('algo_post') }}" method="post" class="post-btn">
+            <form data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('game_post') }}" method="post" class="post-btn">
               <input style="display: none" type="text" name="id" value="{{post.id}}">
               <input style="display: none" type="text" name="category" value="{{post.category}}">
               <input style="display: none" type="text" name="check" value="del">
               <button class="btn" type="submit">Delete</button>
             </form>
-            <form  data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('algo_post') }}" method="post" class="post-btn">
+            <form  data-sb-form-api-token="API_TOKEN" name="delMessage" action="{{ url_for('game_post') }}" method="post" class="post-btn">
               <input style="display: none" type="text" name="id" value="{{post.id}}">
               <input style="display: none" type="text" name="category" value="{{post.category}}">
               <input style="display: none" type="text" name="check" value="edit">

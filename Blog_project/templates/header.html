@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Clean Blog - Start Bootstrap Theme</title>
+  <title>Lincchat</title>
 
   <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
 
     <div class="container">
-      <a class="navbar-brand" href="{{ url_for('home') }}">Start Blog</a>
+      <a class="navbar-brand" href="{{ url_for('home') }}">LinCchat</a>
 
 
        <button
@@ -70,6 +70,14 @@
             <a class="nav-link" href="{{ url_for('login') }}">Login</a>
           </li>
           {% endif %}
+
+          <li class="nav-item">
+            <form action="{{ url_for('search_post') }}" method="POST" style="display: flex;">
+              <input type="text" name="keyword">
+              <button type="submit">SEARCH</button>
+            </form>
+          </li>
+
         </ul>
       </div>
     </div>

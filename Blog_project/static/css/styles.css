@@ -11080,6 +11080,7 @@ blockquote {
   #mainNav .navbar-nav > li.nav-item > a.nav-link:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link:hover {
     color: rgba(255, 255, 255, 0.8);
   }
+
 }
 @media (min-width: 992px) {
   #mainNav {
@@ -15221,3 +15222,56 @@ form button[type="submit"] {
 }
 
 
+.post-btn{
+    display :inline-block;
+}
+
+.navbar .nav-item form {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .nav-item input[type="text"] {
+  width: 150px;
+  height: 30px;
+  font-size: 14px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.navbar .nav-item button[type="submit"] {
+  height: 30px;
+  font-size: 12px;
+  color: #fff;
+  border : none;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  margin-bottom: -1px;
+  background: none;
+}
+  .navbar .nav-item button[type="submit"]:hover {
+  color: #0085A1;
+  }
+@media (max-width: 992px) {
+  .navbar .nav-item button[type="submit"] {
+    color: #5F5F5F;
+  }
+}
+
+
+.navbar .navbar-nav .nav-item:last-child {
+  margin-right: 15px;
+}
+
+.icon img {
+  max-height: 60px;
+  max-width: 200px; 
+  height: auto; 
+  margin-right: 10px; 
+  display: inline-block;
+  margin-right: 10px; 
+}

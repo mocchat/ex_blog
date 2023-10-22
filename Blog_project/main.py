@@ -15,13 +15,15 @@ OWN_EMAIL = "5658love5658@gmail.com"
 OWN_PASSWORD = "svikaanwyilxmwdh"
 app.config["SECRET_KEY"] = "ABCD"
 bp = Blueprint("auth", __name__, url_prefix="/user")
-"""
-conn = pymysql.connect(host='localhost', user='root', password='!aa47287846', db='blog_db', charset='utf8')
+
+conn = pymysql.connect(host='localhost', user='root', password='0000', db='blog_db', charset='utf8')
 cur = conn.cursor()
 
 cur.execute('select password from manager')
-pwd = cur.fetchall()[0][0]
-"""
+pwd = cur.fetchall()
+passwd1 = pwd[0][0]
+passwd2 = pwd[1][0]
+
 
 @app.route('/')
 @app.route('/home',)
@@ -70,13 +72,17 @@ def search_posts(keyword):
         all_posts += json.load(file)
     with open('./static/json/crawl.json', 'r') as file:
         all_posts += json.load(file)
+    with open('./static/json/game.json', 'r') as file:
+        all_posts += json.load(file)
+    with open('./static/json/aws_iv.json', 'r') as file:
+        all_posts += json.load(file)
     for post in all_posts:
         if keyword.lower() in post["title"].lower() or keyword.lower() in post["body"].lower():
             search_results.append(post)
     return search_results
 
 
-#각 포스트 페이지 
+#각 포스트 페이지
 @app.route("/post/<int:index>/<category>", methods=["GET", "POST"])
 def show_post(index, category):
     requested_post = None
@@ -95,6 +101,14 @@ def show_post(index, category):
         f.close()
     elif category == 'Crawl':
         f = open('./static/json/crawl.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Game':
+        f = open('./static/json/game.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Aws_iv':
+        f = open('./static/json/aws_iv.json', 'r')
         posts = json.load(f)
         f.close()
     for blog_post in posts:
@@ -121,6 +135,14 @@ def show_post(index, category):
             f.close()
         elif comment_category == 'Crawl':
             f = open('./static/json/crawl.json', 'r')
+            post = json.load(f)
+            f.close()
+        elif comment_category == 'Game':
+            f = open('./static/json/game.json', 'r')
+            post = json.load(f)
+            f.close()
+        elif comment_category == 'Aws_iv':
+            f = open('./static/json/aws_iv.json', 'r')
             post = json.load(f)
             f.close()
         d = datetime.now()
@@ -157,6 +179,14 @@ def show_post(index, category):
                     f = open('./static/json/crawl.json', 'w')
                     json.dump(post, f, indent="\t")
                     f.close()
+                elif comment_category == 'Game':
+                    f = open('./static/json/game.json', 'w')
+                    json.dump(post, f, indent="\t")
+                    f.close()
+                elif comment_category == 'Aws_iv':
+                    f = open('./static/json/aws_iv.json', 'w')
+                    json.dump(post, f, indent="\t")
+                    f.close()
                 return redirect(url_for('show_post', index=index, category=category))
     return render_template("post.html", post=requested_post)
 
@@ -178,6 +208,14 @@ def delete_comment(index, comment_id, category):
         f.close()
     elif category == 'Crawl':
         f = open('./static/json/crawl.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Aws_iv':
+        f = open('./static/json/aws_iv.json', 'r')
+        posts = json.load(f)
+        f.close()
+    elif category == 'Game':
+        f = open('./static/json/game.json', 'r')
         posts = json.load(f)
         f.close()
     for blog_post in posts:
@@ -203,6 +241,14 @@ def delete_comment(index, comment_id, category):
         f = open('./static/json/crawl.json', 'w')
         json.dump(posts, f, indent="\t")
         f.close()
+    elif category == 'Game':
+        f = open('./static/json/game.json', 'w')
+        json.dump(posts, f, indent="\t")
+        f.close()
+    elif category == 'Aws_iv':
+        f = open('./static/json/aws_iv.json', 'w')
+        json.dump(posts, f, indent="\t")
+        f.close()
     return redirect(url_for('show_post', index=index, category=category))
 
 
@@ -224,14 +270,14 @@ def login():
         password = request.form['password']
         m = hashlib.sha256()
         m.update(password.encode('utf-8'))  #f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3 (비번은 'qwer')
-        if m.hexdigest() != 'f6f2ea8f45d8a057c9566a33f99474da2e5c6a6604d736121650e2730c6fb0a3' and m.hexdigest() != '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4':
+        if m.hexdigest() != passwd1 and m.hexdigest() != passwd2:
             error = "비밀번호가 올바르지 않습니다."
         if error is None:
             session.clear()
-            if password == 'qwer':
+            if password != passwd1:
                 session['manager'] = 'mocchat'
             else:
-                session['manager'] = 'Blog_project'
+                session['manager'] = 'lindin'
             return redirect(url_for('home'))
         flash(error)
     return render_template("login.html")
@@ -264,7 +310,7 @@ def blog_post():
     return render_template("blog_post.html", year=year, all_posts=re_posts)
 
 
-#테스트 포스팅 보는곳 
+#테스트 포스팅 보는곳
 @app.route("/certificate_post", methods=["GET", "POST"])
 def test_post():
     f = open('static/json/Certificate.json', 'r')
@@ -343,6 +389,58 @@ def crawl_post():
     return render_template("crawl_post.html", year=year, all_posts=re_posts)
 
 
+@app.route("/aws_iv_post", methods=["GET", "POST"])
+def aws_iv_post():
+    f = open('./static/json/aws_iv.json', 'r')
+    posts = json.load(f)
+    f.close()
+    re_posts = list(reversed(posts))
+    if request.method == "POST":
+        if request.form['check'] == 'del':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    del posts[i]
+                    break
+            f = open('./static/json/aws_iv.json', 'w')
+            json.dump(posts, f, indent="\t")
+            f.close()
+            return redirect(url_for('aws_iv_post'))
+        if request.form['check'] == 'edit':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    f.close()
+                    return render_template("edit.html", epost=posts[i])
+    return render_template("aws_iv_post.html", year=year, all_posts=re_posts)
+
+
+@app.route("/game_post", methods=["GET", "POST"])
+def game_post():
+    f = open('./static/json/game.json', 'r')
+    posts = json.load(f)
+    f.close()
+    re_posts = list(reversed(posts))
+    if request.method == "POST":
+        if request.form['check'] == 'del':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    del posts[i]
+                    break
+            f = open('./static/json/game.json', 'w')
+            json.dump(posts, f, indent="\t")
+            f.close()
+            return redirect(url_for('game_post'))
+        if request.form['check'] == 'edit':
+            pid = int(request.form['id'])
+            for i in range(len(posts)):
+                if posts[i]['id'] == pid:
+                    f.close()
+                    return render_template("edit.html", epost=posts[i])
+    return render_template("game_post.html", year=year, all_posts=re_posts)
+
+
 #로그인 확인
 @app.before_request
 def load_logged_in_user():
@@ -388,6 +486,12 @@ def add_post():
         elif data['category'] == 'Crawl':
             add_crawljson(new)
             return redirect(url_for('crawl_post'))
+        elif data['category'] == 'Game':
+            add_gamejson(new)
+            return redirect(url_for('game_post'))
+        elif data['category'] == 'Aws_iv':
+            add_aws_ivjson(new)
+            return redirect(url_for('aws_iv_post'))
     return render_template("add_post.html")
 
 
@@ -444,7 +548,30 @@ def edit_post():
             with open('./static/json/crawl.json', 'w') as file:
                 json.dump(posts, file, indent=4)
             return redirect(url_for('crawl_post'))
-
+        elif data['category'] == 'Game':
+            with open('./static/json/game.json', 'r') as file:
+                posts = json.load(file)
+                for i in range(len(posts)):
+                    if posts[i]['id'] == int(data['id']):
+                        posts[i]['title'] = data['Title']
+                        posts[i]['subtitle'] = data['Sub']
+                        posts[i]['body'] = data.get('ckeditor')
+                        break
+            with open('./static/json/game.json', 'w') as file:
+                json.dump(posts, file, indent=4)
+            return redirect(url_for('game_post'))
+        elif data['category'] == 'Aws_iv':
+            with open('./static/json/aws_iv.json', 'r') as file:
+                posts = json.load(file)
+                for i in range(len(posts)):
+                    if posts[i]['id'] == int(data['id']):
+                        posts[i]['title'] = data['Title']
+                        posts[i]['subtitle'] = data['Sub']
+                        posts[i]['body'] = data.get('ckeditor')
+                        break
+            with open('./static/json/aws_iv.json', 'w') as file:
+                json.dump(posts, file, indent=4)
+            return redirect(url_for('aws_iv_post'))
 
 #메일 보내는 함수
 def send_email(name, email, phone, message):
@@ -505,6 +632,30 @@ def add_crawljson(new_post, filename='./static/json/crawl.json'):
         json.dump(file_content, file, indent=4)
 
 
+def add_gamejson(new_post, filename='./static/json/game.json'):
+    with open(filename, 'r+') as file:
+        file_content = json.load(file)
+        if len(file_content) == 0:
+            new_post['id'] = 0
+        else:
+            new_post['id'] = file_content[len(file_content)-1]['id'] + 1
+        file_content.append(new_post)
+        file.seek(0)
+        json.dump(file_content, file, indent=4)
+
+
+def add_aws_ivjson(new_post, filename='./static/json/aws_iv.json'):
+    with open(filename, 'r+') as file:
+        file_content = json.load(file)
+        if len(file_content) == 0:
+            new_post['id'] = 0
+        else:
+            new_post['id'] = file_content[len(file_content)-1]['id'] + 1
+        file_content.append(new_post)
+        file.seek(0)
+        json.dump(file_content, file, indent=4)
+
+
 if __name__ == "__main__":
-    year = str(date.today().year)
-    app.run(debug=True)
+    year = str(date.today().year) 
+    app.run(debug=True, host='0.0.0.0', port=90)
